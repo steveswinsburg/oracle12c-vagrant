@@ -8,7 +8,7 @@ from http://www.oracle.com/technetwork/database/enterprise-edition/downloads/ind
 3. Run `vagrant up`
 
 ## Connecting to Oracle
-SID: orcl
-Installation path: /opt/oracle/
+SID: `orcl`
+Installation path: `/opt/oracle/`
 
-All passwords are blank
+All passwords are `password`.

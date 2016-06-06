@@ -5,7 +5,10 @@ A vagrant box with Oracle 12c.
 1. Clone this repository
 2. Download the Oracle Database 12c binaries `linuxamd64_12c_database_1of2.zip` and `linuxamd64_12c_database_2of2.zip`
 from http://www.oracle.com/technetwork/database/enterprise-edition/downloads/index.html and unzip to `database/`
-3. Run `vagrant up`
+3. Install Virtualbox
+4. Install VirtualBox plugin `vagrant plugin install vagrant-vbguest`
+5. Install Vagrant
+6. Run `vagrant up`
 
 ## Connecting to Oracle
 SID: `orcl`

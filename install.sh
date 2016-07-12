@@ -42,24 +42,17 @@ echo "export ORACLE_BASE=/opt/oracle" >> /home/oracle/.bash_profile \
 echo 'INSTALLER: Environment variables set'
 
 # install Oracle
-sudo su - oracle
-/vagrant/database/runInstaller -silent -showProgress -ignorePrereq -responseFile /vagrant/db_install.rsp
-exit
-sudo /opt/oraInventory/orainstRoot.sh
-sudo /opt/oracle/product/12.1.0.2/dbhome_1/root.sh
-
+su -l oracle -c "yes | /vagrant/database/runInstaller -silent -showProgress -ignorePrereq -responseFile /vagrant/db_install.rsp"
+/opt/oraInventory/orainstRoot.sh
+/opt/oracle/product/12.1.0.2/dbhome_1/root.sh
 echo 'INSTALLER: Oracle installed'
 
 # create listener via netca
-sudo su - oracle
-netca -silent -responseFile $ORACLE_HOME/assistants/netca/netca.rsp
-
+su -l oracle -c "netca -silent -responseFile /opt/oracle/product/12.1.0.2/dbhome_1/assistants/netca/netca.rsp"
 echo 'INSTALLER: Listener created'
 
-
 # create database
-dbca -silent -createDatabase -responseFile /vagrant/dbca.rsp
-
+su -l oracle -c "dbca -silent -createDatabase -responseFile /vagrant/dbca.rsp"
 echo 'INSTALLER: Database created'
 
 echo 'INSTALLER:Installation complete'

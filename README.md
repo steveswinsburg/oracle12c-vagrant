@@ -15,3 +15,27 @@ SID: `orcl`
 Installation path: `/opt/oracle/`
 
 All passwords are `password`.
+
+## Known issues
+
+On `vagrant up` if you experience this issue:
+````
+default: Error: Authentication failure. Retrying...
+default: Error: Authentication failure. Retrying...
+default: Error: Authentication failure. Retrying...
+default: Error: Authentication failure. Retrying...
+default: Error: Authentication failure. Retrying...
+````
+Then you may have hit a bug in vagrant 1.8.5. See
+http://stackoverflow.com/questions/22922891/vagrant-ssh-authentication-failure
+
+The solution is to:
+````
+vagrant ssh 
+password: vagrant 
+chmod 0600 ~/.ssh/authorized_keys
+exit
+````
+
+then `vagrant reload`.
+

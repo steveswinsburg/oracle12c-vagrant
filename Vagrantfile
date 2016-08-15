@@ -23,6 +23,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "shell", path: "install.sh"
   
   # start oracle and listener every time
-  config.vm.provision "shell", path: "startup.sh", run: "always"
+  #config.vm.provision "shell", path: "startup.sh", run: "always"
 
 end

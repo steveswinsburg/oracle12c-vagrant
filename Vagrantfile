@@ -13,13 +13,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # change memory size
   config.vm.provider "virtualbox" do |v|
-    v.memory = 2048
+    v.memory = 4096
   end
 
   # Oracle port forwarding
   config.vm.network "forwarded_port", guest: 1521, host: 1521
 
-  # run setup.sh
+  # run setup.sh the first time
   config.vm.provision "shell", path: "install.sh"
+  
+  # start oracle and listener every time
+  config.vm.provision "shell", path: "startup.sh", run: "always"
 
 end

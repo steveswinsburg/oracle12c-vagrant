@@ -1,6 +1,19 @@
 #!/bin/sh
 
+# Note that if you change the ORACLE_HOME or ORACLE_BASE in the response files
+# then you will also need to update this script
+
 echo 'INSTALLER: Starting up'
+
+# add a new swapfile of 3G and attach it
+# total swap approx 4G
+dd if=/dev/zero of=/swapfile bs=1024 count=3072000
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo "/swapfile swap swap defaults 0 0" >> /etc/fstab
+
+echo 'INSTALLER: Expanded swap'
 
 # convert into Oracle Linux 6
 curl -O https://linux.oracle.com/switch/centos2ol.sh
@@ -8,9 +21,13 @@ sh centos2ol.sh
 
 echo 'INSTALLER: Now running Oracle Linux 6'
 
-# get up to date
+# install required libraries
 yum install -y MAKEDEV
 yum install -y nano
+yum install -y libaio
+yum install -y libaio-devel
+
+# get up to date
 yum upgrade -y
 
 echo 'INSTALLER: System updated'
@@ -47,12 +64,49 @@ su -l oracle -c "yes | /vagrant/database/runInstaller -silent -showProgress -ign
 /opt/oracle/product/12.1.0.2/dbhome_1/root.sh
 echo 'INSTALLER: Oracle installed'
 
+# To workaround an installer bug, we need to ensure a missing library is in place, then rebuild and relink
+# The actual Oracle installation appears to work, however the logs show this:
+# INFO: /usr/bin/ld: cannot find -ljavavm12
+# Which then causes a compilation failure and the oracle binary (and several others) end up being 0 bytes
+# Ref: http://ruleoftech.com/2016/problems-with-installing-oracle-db-12c-ee-ora-12547-tns-lost-contact
+# Additional:
+# make -kf ins_reports60w.mk install (on CCMgr server)
+# make -kf ins_forms60w.install (on Forms/Web server) 
+# And then to fix the error on relinking... https://dbasolved.com/2015/08/24/issue-with-perl-in-oracle_home-during-installs/
+
+ORACLE_HOME=/opt/oracle/product/12.1.0.2/dbhome_1
+
+# Reinstall Perl
+su -l oracle -c "cd ~"
+su -l oracle -c "wget http://www.cpan.org/src/5.0/perl-5.14.4.tar.gz $ORACLE_HOME/steve"
+su -l oracle -c "tar -xzf perl-5.14.4.tar.gz"
+su -l oracle -c "cd perl-5.14.4"
+su -l oracle -c "./Configure -des -Dprefix=$ORACLE_HOME/perl" 
+su -l oracle -c "make"
+su -l oracle -c "make install"
+
+# Recompile and relink
+su -l oracle -c "cd $ORACLE_HOME/rdbms/lib"
+su -l oracle -c "mv config.o config.o.bad"
+su -l oracle -c "cp $ORACLE_HOME/javavm/jdk/jdk6/lib/libjavavm12.a $ORACLE_HOME/lib/"
+su -l oracle -c "chown oracle:oinstall $ORACLE_HOME/lib/libjavavm12.a"
+su -l oracle -c "cd $ORACLE_HOME/rdbms/lib"
+su -l oracle -c "make -f ins_rdbms.mk install"
+su -l oracle -c "cd $ORACLE_HOME/network/lib"
+su -l oracle -c "make -f ins_net_server.mk install"
+su -l oracle -c "cd $ORACLE_HOME/sqlplus/lib"
+su -l oracle -c "make -kf ins_sqlplus.mk install"
+su -l oracle -c "cd $ORACLE_HOME/bin"
+su -l oracle -c "relink all"
+
+echo 'INSTALLER: Oracle installation fixed and relinked'
+
 # create listener via netca
-su -l oracle -c "netca -silent -responseFile /vagrant/netca.rsp"
+#su -l oracle -c "netca -silent -responseFile /vagrant/netca.rsp"
 echo 'INSTALLER: Listener created'
 
 # create database
-su -l oracle -c "dbca -silent -createDatabase -responseFile /vagrant/dbca.rsp"
+#su -l oracle -c "dbca -silent -createDatabase -responseFile /vagrant/dbca.rsp"
 echo 'INSTALLER: Database created'
 
 echo 'INSTALLER: Installation complete'

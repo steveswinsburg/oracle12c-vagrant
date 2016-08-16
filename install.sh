@@ -69,44 +69,39 @@ echo 'INSTALLER: Oracle installed'
 # INFO: /usr/bin/ld: cannot find -ljavavm12
 # Which then causes a compilation failure and the oracle binary (and several others) end up being 0 bytes
 # Ref: http://ruleoftech.com/2016/problems-with-installing-oracle-db-12c-ee-ora-12547-tns-lost-contact
-# Additional:
+# Optionally:
 # make -kf ins_reports60w.mk install (on CCMgr server)
 # make -kf ins_forms60w.install (on Forms/Web server) 
-# And then to fix the error on relinking... https://dbasolved.com/2015/08/24/issue-with-perl-in-oracle_home-during-installs/
+# And then to fix the error on relinking, reinstall Perl:
+# Ref: https://dbasolved.com/2015/08/24/issue-with-perl-in-oracle_home-during-installs/
 
 ORACLE_HOME=/opt/oracle/product/12.1.0.2/dbhome_1
 
 # Reinstall Perl
-su -l oracle -c "cd ~"
-su -l oracle -c "wget http://www.cpan.org/src/5.0/perl-5.14.4.tar.gz $ORACLE_HOME/steve"
-su -l oracle -c "tar -xzf perl-5.14.4.tar.gz"
-su -l oracle -c "cd perl-5.14.4"
-su -l oracle -c "./Configure -des -Dprefix=$ORACLE_HOME/perl" 
-su -l oracle -c "make"
-su -l oracle -c "make install"
+wget http://www.cpan.org/src/5.0/perl-5.14.4.tar.gz -P /tmp/
+tar -xzf /tmp/perl-5.14.4.tar.gz
+./tmp/perl-5.14.4/Configure -des -Dprefix=$ORACLE_HOME/perl 
+make -C /tmp/perl-5.14.4
+make -C /tmp/perl-5.14.4 install
+chown oracle:oinstall $ORACLE_HOME/perl
 
 # Recompile and relink
-su -l oracle -c "cd $ORACLE_HOME/rdbms/lib"
-su -l oracle -c "mv config.o config.o.bad"
+su -l oracle -c "mv $ORACLE_HOME/rdbms/lib/config.o $ORACLE_HOME/rdbms/lib/config.o.bad"
 su -l oracle -c "cp $ORACLE_HOME/javavm/jdk/jdk6/lib/libjavavm12.a $ORACLE_HOME/lib/"
 su -l oracle -c "chown oracle:oinstall $ORACLE_HOME/lib/libjavavm12.a"
-su -l oracle -c "cd $ORACLE_HOME/rdbms/lib"
-su -l oracle -c "make -f ins_rdbms.mk install"
-su -l oracle -c "cd $ORACLE_HOME/network/lib"
-su -l oracle -c "make -f ins_net_server.mk install"
-su -l oracle -c "cd $ORACLE_HOME/sqlplus/lib"
-su -l oracle -c "make -kf ins_sqlplus.mk install"
-su -l oracle -c "cd $ORACLE_HOME/bin"
-su -l oracle -c "relink all"
+su -l oracle -c "make -f $ORACLE_HOME/rdbms/lib/ins_rdbms.mk install"
+su -l oracle -c "make -f $ORACLE_HOME/network/lib/ins_net_server.mk install"
+su -l oracle -c "make -kf $ORACLE_HOME/sqlplus/lib/ins_sqlplus.mk install"
+su -l oracle -c "$ORACLE_HOME/bin/relink all"
 
 echo 'INSTALLER: Oracle installation fixed and relinked'
 
 # create listener via netca
-#su -l oracle -c "netca -silent -responseFile /vagrant/netca.rsp"
+su -l oracle -c "netca -silent -responseFile /vagrant/netca.rsp"
 echo 'INSTALLER: Listener created'
 
 # create database
-#su -l oracle -c "dbca -silent -createDatabase -responseFile /vagrant/dbca.rsp"
+su -l oracle -c "dbca -silent -createDatabase -responseFile /vagrant/dbca.rsp"
 echo 'INSTALLER: Database created'
 
 echo 'INSTALLER: Installation complete'

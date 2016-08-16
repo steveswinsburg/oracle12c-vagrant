@@ -62,6 +62,7 @@ echo 'INSTALLER: Environment variables set'
 su -l oracle -c "yes | /vagrant/database/runInstaller -silent -showProgress -ignorePrereq -waitforcompletion -responseFile /vagrant/db_install.rsp"
 /opt/oraInventory/orainstRoot.sh
 /opt/oracle/product/12.1.0.2/dbhome_1/root.sh
+
 echo 'INSTALLER: Oracle installed'
 
 # To workaround an installer bug, we need to ensure a missing library is in place, then rebuild and relink
@@ -79,10 +80,11 @@ ORACLE_HOME=/opt/oracle/product/12.1.0.2/dbhome_1
 
 # Reinstall Perl
 wget http://www.cpan.org/src/5.0/perl-5.14.4.tar.gz -P /tmp/
-tar -xzf /tmp/perl-5.14.4.tar.gz
-./tmp/perl-5.14.4/Configure -des -Dprefix=$ORACLE_HOME/perl 
-make -C /tmp/perl-5.14.4
-make -C /tmp/perl-5.14.4 install
+tar -xzf /tmp/perl-5.14.4.tar.gz -C /tmp/
+cd /tmp/perl-5.14.4
+./Configure -des -Dprefix=$ORACLE_HOME/perl 
+make
+make install
 chown oracle:oinstall $ORACLE_HOME/perl
 
 # Recompile and relink

@@ -16,10 +16,17 @@ from http://www.oracle.com/technetwork/database/enterprise-edition/downloads/ind
     9. Note that on the next `vagrant up`, the box will automatically update the VirtualBox Guest Additions.
 
 ## Connecting to Oracle
-SID: `orcl`
-Installation path: `/opt/oracle/`
+* Hostname: `localhost`
+* Port: `1521`
+* SID: `orcl`
+* All passwords are `password`.
 
-All passwords are `password`.
+## Other info
+
+* If you need to, you can connect to the machine via `vagrant ssh`.
+* You can `sudo su - oracle` to switch to the oracle user.
+* The Oracle installation path is `/opt/oracle/`
+* On the guest OS, the directory `/vagrant` is a shared folder and maps to wherever you have this file checked out.
 
 ## Known issues
 

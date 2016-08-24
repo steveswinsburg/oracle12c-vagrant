@@ -20,10 +20,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Oracle port forwarding
   config.vm.network "forwarded_port", guest: 1521, host: 1521
 
-  # Provision everything
+  # Provision everything on the first run
   config.vm.provision "shell", path: "install.sh"
   
-  # start oracle and listener every time
-  #config.vm.provision "shell", path: "startup.sh", run: "always"
+  # Start oracle and listener every time
+  config.vm.provision "shell", path: "startup.sh", run: "always"
 
 end

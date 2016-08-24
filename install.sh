@@ -2,6 +2,8 @@
 
 # Note that if you change the ORACLE_HOME or ORACLE_BASE in the response files
 # then you will also need to update this script
+# Note also that the VB Guest additions will be automatically installed on the NEXT vagrant up
+
 
 echo 'INSTALLER: Starting up'
 
@@ -26,7 +28,6 @@ yum install -y MAKEDEV
 yum install -y nano
 yum install -y libaio
 yum install -y libaio-devel
-yum install -y kernel-devel
 
 # get up to date
 yum upgrade -y
@@ -106,15 +107,5 @@ echo 'INSTALLER: Listener created'
 # create database
 su -l oracle -c "dbca -silent -createDatabase -responseFile /vagrant/dbca.rsp"
 echo 'INSTALLER: Database created'
-
-# kernel has been updated so reinstall the VirtualBox guest additions
-wget http://download.virtualbox.org/virtualbox/5.0.24/VBoxGuestAdditions_5.0.24.iso -P /tmp/
-mkdir /media/VBoxGuestAdditions
-mount -o loop,ro /tmp/VBoxGuestAdditions_5.0.24.iso /media/VBoxGuestAdditions
-sh /media/VBoxGuestAdditions/VBoxLinuxAdditions.run
-rm /tmp/VBoxGuestAdditions_5.0.24.iso
-umount /media/VBoxGuestAdditions
-rmdir /media/VBoxGuestAdditions
-echo 'INSTALLER: VirtualBox Guest Additions installed'
 
 echo 'INSTALLER: Installation complete'

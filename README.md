@@ -12,6 +12,7 @@ from http://www.oracle.com/technetwork/database/enterprise-edition/downloads/ind
 6. Run `vagrant up`
     6. The first time you run this it will provision everything and may take a while. Ensure you have a good internet connection!
 7. Connect to the database.
+8. you can shutdown the box via the usual `vagrant halt` and the start it up again via `vagrant up`.
 
 ## Connecting to Oracle
 SID: `orcl`

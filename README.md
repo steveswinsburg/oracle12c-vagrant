@@ -3,9 +3,10 @@ A vagrant box with Oracle 12c.
 
 ## Getting started
 1. Clone this repository
-2. Download the Oracle Database 12c binaries `linuxamd64_12c_database_1of2.zip` and `linuxamd64_12c_database_2of2.zip`
+2. Download the Oracle Database 12c binaries `linuxamd64_12102_database_1of2.zip` and `linuxamd64_12102_database_2of2.zip`
 from http://www.oracle.com/technetwork/database/enterprise-edition/downloads/index.html and unzip to `database/`
 2b. Ensure you unzip into the same directory and they merge. There are some common directories in each.
+2c. On the commandline, you can run `unzip '*.zip'` to do this for you.
 3. Install Virtualbox
 4. Install Vagrant
 5. Install VirtualBox plugin `vagrant plugin install vagrant-vbguest`
@@ -19,7 +20,7 @@ All passwords are `password`.
 
 ## Known issues
 
-On `vagrant up` if you experience this issue:
+1. On `vagrant up` if you experience this issue:
 ````
 default: Error: Authentication failure. Retrying...
 default: Error: Authentication failure. Retrying...
@@ -39,4 +40,6 @@ exit
 ````
 
 then `vagrant reload`.
+
+2. Once Oracle and the listener starts up, it may take a few moments until you are able to connect to the DB, eg via SQL Developer.
 

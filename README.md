@@ -22,7 +22,9 @@ All passwords are `password`.
 
 ## Known issues
 
-1. On `vagrant up` if you experience this issue:
+#### Repeated authentication failure message
+
+On `vagrant up` if you experience this issue:
 ````
 default: Error: Authentication failure. Retrying...
 default: Error: Authentication failure. Retrying...
@@ -43,5 +45,6 @@ exit
 
 then `vagrant reload`.
 
-2. Once Oracle and the listener starts up, it may take a few moments until you are able to connect to the DB, eg via SQL Developer.
+#### Connection time after startup
+Once Oracle and the listener starts up, it may take a few moments until you are able to connect to the DB, eg via SQL Developer.
 

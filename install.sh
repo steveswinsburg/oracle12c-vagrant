@@ -27,25 +27,11 @@ yum install -y nano
 yum install -y libaio
 yum install -y libaio-devel
 yum install -y kernel-devel
-yum install -y gcc
-yum install -y make
-yum install -y perl
 
 # get up to date
 yum upgrade -y
 
 echo 'INSTALLER: System updated'
-
-# we have updated the kernel so we have to reinstall the VirtualBox guest additions
-wget http://download.virtualbox.org/virtualbox/5.0.24/VBoxGuestAdditions_5.0.24.iso -P /tmp/
-mkdir /media/VBoxGuestAdditions
-mount -o loop,ro /tmp/VBoxGuestAdditions_5.0.24.iso /media/VBoxGuestAdditions
-sh /media/VBoxGuestAdditions/VBoxLinuxAdditions.run
-rm /tmp/VBoxGuestAdditions_5.0.24.iso
-umount /media/VBoxGuestAdditions
-rmdir /media/VBoxGuestAdditions
-
-echo 'INSTALLER: VirtualBox Guest Additions installed'
 
 # fix locale warning
 yum reinstall -y glibc-common
@@ -120,5 +106,15 @@ echo 'INSTALLER: Listener created'
 # create database
 su -l oracle -c "dbca -silent -createDatabase -responseFile /vagrant/dbca.rsp"
 echo 'INSTALLER: Database created'
+
+# kernel has been updated so reinstall the VirtualBox guest additions
+wget http://download.virtualbox.org/virtualbox/5.0.24/VBoxGuestAdditions_5.0.24.iso -P /tmp/
+mkdir /media/VBoxGuestAdditions
+mount -o loop,ro /tmp/VBoxGuestAdditions_5.0.24.iso /media/VBoxGuestAdditions
+sh /media/VBoxGuestAdditions/VBoxLinuxAdditions.run
+rm /tmp/VBoxGuestAdditions_5.0.24.iso
+umount /media/VBoxGuestAdditions
+rmdir /media/VBoxGuestAdditions
+echo 'INSTALLER: VirtualBox Guest Additions installed'
 
 echo 'INSTALLER: Installation complete'

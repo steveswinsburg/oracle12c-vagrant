@@ -1,5 +1,5 @@
 # oracle12c-vagrant
-A vagrant box that provisions Oracle 12c automatically.
+A vagrant box that provisions Oracle 12c automatically, using only Vagrant and a shell script.
 
 ## Getting started
 1. Clone this repository

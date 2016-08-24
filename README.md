@@ -5,8 +5,7 @@ A vagrant box that provisions Oracle 12c automatically.
 1. Clone this repository
 2. Download the Oracle Database 12c binaries `linuxamd64_12102_database_1of2.zip` and `linuxamd64_12102_database_2of2.zip`
 from http://www.oracle.com/technetwork/database/enterprise-edition/downloads/index.html and unzip to `database/`
-    2. Ensure you unzip into the same directory and they merge. There are some common directories in each.
-    2. On the commandline, you can run `unzip '*.zip'` to do this for you.
+    2. Ensure you unzip into the same directory and they merge. There are some common directories in each. On the commandline, you can run `unzip '*.zip'` to do this for you.
 3. Install Virtualbox
 4. Install Vagrant
 5. Install VirtualBox plugin `vagrant plugin install vagrant-vbguest`

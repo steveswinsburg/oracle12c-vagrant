@@ -16,7 +16,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # change memory size
   config.vm.provider "virtualbox" do |v|
-    v.memory = 4096
+    v.memory = 4000
     v.name = "oracle12c-vagrant"
   end
 

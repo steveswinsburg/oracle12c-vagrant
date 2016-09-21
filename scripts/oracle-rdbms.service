@@ -1,0 +1,13 @@
+[Unit]
+Description=Oracle Database(s) and Listener
+Requires=network.target
+
+[Service]
+Type=forking
+Restart=no
+ExecStart=/opt/oracle/product/12.1.0.2/dbhome_1/bin/dbstart /opt/oracle/product/12.1.0.2/dbhome_1
+ExecStop=/opt/oracle/product/12.1.0.2/dbhome_1/bin/dbshut /opt/oracle/product/12.1.0.2/dbhome_1
+User=oracle
+
+[Install]
+WantedBy=multi-user.target

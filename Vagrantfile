@@ -24,9 +24,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "forwarded_port", guest: 1521, host: 1521
 
   # Provision everything on the first run
-  config.vm.provision "shell", path: "install.sh"
-  
-  # Start oracle and listener every time
-  config.vm.provision "shell", path: "startup.sh", run: "always"
+  config.vm.provision "shell", path: "scripts/install.sh"
 
+  # if Vagrant.has_plugin?("vagrant-proxyconf")
+  #   config.proxy.http     = "http://proxy.example.com/"
+  #   config.proxy.https    = "http://proxy.example.com/"
+  #   config.proxy.no_proxy = "localhost,127.0.0.1"
+  # end
 end

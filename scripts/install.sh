@@ -17,9 +17,10 @@ echo "/swapfile swap swap defaults 0 0" >> /etc/fstab
 
 echo 'INSTALLER: Expanded swap'
 
-# convert into Oracle Linux 6
+# convert into Oracle Linux 7
 curl -O https://linux.oracle.com/switch/centos2ol.sh
 sh centos2ol.sh
+rm /home/vagrant/centos2ol
 
 echo 'INSTALLER: Now running Oracle Linux 6'
 
@@ -53,15 +54,15 @@ chown oracle:oinstall -R /opt
 echo 'INSTALLER: Oracle directories created'
 
 # set environment variables
-echo "export ORACLE_BASE=/opt/oracle" >> /home/oracle/.bash_profile \
- && echo "export ORACLE_HOME=/opt/oracle/product/12.1.0.2/dbhome_1" >> /home/oracle/.bash_profile \
- && echo "export ORACLE_SID=orcl" >> /home/oracle/.bash_profile \
- && echo "export PATH=\$PATH:\$ORACLE_HOME/bin" >> /home/oracle/.bash_profile
+echo "export ORACLE_BASE=/opt/oracle" >> /home/oracle/.bashrc \
+ && echo "export ORACLE_HOME=/opt/oracle/product/12.1.0.2/dbhome_1" >> /home/oracle/.bashrc \
+ && echo "export ORACLE_SID=orcl" >> /home/oracle/.bashrc \
+ && echo "export PATH=\$PATH:\$ORACLE_HOME/bin" >> /home/oracle/.bashrc
 
 echo 'INSTALLER: Environment variables set'
 
 # install Oracle
-su -l oracle -c "yes | /vagrant/database/runInstaller -silent -showProgress -ignorePrereq -waitforcompletion -responseFile /vagrant/db_install.rsp"
+su -l oracle -c "yes | /vagrant/database/runInstaller -silent -showProgress -ignorePrereq -waitforcompletion -responseFile /vagrant/ora-responce/db_install.rsp"
 /opt/oraInventory/orainstRoot.sh
 /opt/oracle/product/12.1.0.2/dbhome_1/root.sh
 
@@ -74,7 +75,7 @@ echo 'INSTALLER: Oracle installed'
 # Ref: http://ruleoftech.com/2016/problems-with-installing-oracle-db-12c-ee-ora-12547-tns-lost-contact
 # Optionally:
 # make -kf ins_reports60w.mk install (on CCMgr server)
-# make -kf ins_forms60w.install (on Forms/Web server) 
+# make -kf ins_forms60w.install (on Forms/Web server)
 # And then to fix the error on relinking, reinstall Perl:
 # Ref: https://dbasolved.com/2015/08/24/issue-with-perl-in-oracle_home-during-installs/
 
@@ -84,7 +85,7 @@ ORACLE_HOME=/opt/oracle/product/12.1.0.2/dbhome_1
 wget http://www.cpan.org/src/5.0/perl-5.14.4.tar.gz -P /tmp/
 tar -xzf /tmp/perl-5.14.4.tar.gz -C /tmp/
 cd /tmp/perl-5.14.4
-./Configure -des -Dprefix=$ORACLE_HOME/perl 
+./Configure -des -Dprefix=$ORACLE_HOME/perl
 make
 make install
 chown oracle:oinstall $ORACLE_HOME/perl
@@ -101,11 +102,21 @@ su -l oracle -c "$ORACLE_HOME/bin/relink all"
 echo 'INSTALLER: Oracle installation fixed and relinked'
 
 # create listener via netca
-su -l oracle -c "netca -silent -responseFile /vagrant/netca.rsp"
+su -l oracle -c "netca -silent -responseFile /vagrant/ora-responce/netca.rsp"
 echo 'INSTALLER: Listener created'
 
 # create database
-su -l oracle -c "dbca -silent -createDatabase -responseFile /vagrant/dbca.rsp"
+su -l oracle -c "dbca -silent -createDatabase -responseFile /vagrant/ora-responce/dbca.rsp"
 echo 'INSTALLER: Database created'
+
+sed '$s/N/Y/' /etc/oratab | sudo tee /etc/oratab > /dev/null
+echo 'INSTALLER: Oratab configured'
+
+# configure systemd to start oracle instance on startup
+sudo cp /vagrant/scripts/oracle-rdbms.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable oracle-rdbms
+sudo systemctl start oracle-rdbms
+echo "INSTALLER: Created and enable oracle-rdbms systemd's service"
 
 echo 'INSTALLER: Installation complete'

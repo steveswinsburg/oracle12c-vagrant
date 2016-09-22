@@ -62,7 +62,7 @@ echo "export ORACLE_BASE=/opt/oracle" >> /home/oracle/.bashrc \
 echo 'INSTALLER: Environment variables set'
 
 # install Oracle
-su -l oracle -c "yes | /vagrant/database/runInstaller -silent -showProgress -ignorePrereq -waitforcompletion -responseFile /vagrant/ora-responce/db_install.rsp"
+su -l oracle -c "yes | /vagrant/database/runInstaller -silent -showProgress -ignorePrereq -waitforcompletion -responseFile /vagrant/ora-response/db_install.rsp"
 /opt/oraInventory/orainstRoot.sh
 /opt/oracle/product/12.1.0.2/dbhome_1/root.sh
 
@@ -102,11 +102,11 @@ su -l oracle -c "$ORACLE_HOME/bin/relink all"
 echo 'INSTALLER: Oracle installation fixed and relinked'
 
 # create listener via netca
-su -l oracle -c "netca -silent -responseFile /vagrant/ora-responce/netca.rsp"
+su -l oracle -c "netca -silent -responseFile /vagrant/ora-response/netca.rsp"
 echo 'INSTALLER: Listener created'
 
 # create database
-su -l oracle -c "dbca -silent -createDatabase -responseFile /vagrant/ora-responce/dbca.rsp"
+su -l oracle -c "dbca -silent -createDatabase -responseFile /vagrant/ora-response/dbca.rsp"
 echo 'INSTALLER: Database created'
 
 sed '$s/N/Y/' /etc/oratab | sudo tee /etc/oratab > /dev/null

@@ -117,6 +117,6 @@ sudo cp /vagrant/scripts/oracle-rdbms.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable oracle-rdbms
 sudo systemctl start oracle-rdbms
-echo "INSTALLER: Created and enable oracle-rdbms systemd's service"
+echo "INSTALLER: Created and enabled oracle-rdbms systemd's service"
 
 echo 'INSTALLER: Installation complete'

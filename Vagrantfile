@@ -18,6 +18,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider "virtualbox" do |v|
     v.memory = 4000
     v.name = "oracle12c-vagrant"
+    v.customize ["modifyvm", :id, "--cableconnected1", "on"]
   end
 
   # Oracle port forwarding

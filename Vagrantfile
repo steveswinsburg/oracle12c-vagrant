@@ -9,15 +9,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "bento/centos-7.2"
   
   config.vm.box_check_update = false
-  config.vbguest.auto_update = true
+  config.vbguest.auto_update = false
   
   # workaround the vagrant 1.8.5 bug
   config.ssh.insert_key = false
 
   # change memory size
   config.vm.provider "virtualbox" do |v|
-    v.memory = 4000
+    v.memory = 4096
     v.name = "oracle12c-vagrant"
+    v.cpus = 4
     v.customize ["modifyvm", :id, "--cableconnected1", "on"]
   end
 

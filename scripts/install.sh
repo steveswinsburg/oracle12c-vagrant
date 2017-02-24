@@ -4,10 +4,12 @@
 # then you will also need to update this script
 # Note also that the VB Guest additions will be automatically installed on the NEXT vagrant up
 
+echo 'Upgrading OS...'
+yum update -y
 
 echo 'INSTALLER: Starting up'
 
-# add a new swapfile of 3G and attach it
+# add a new swap file of 3G and attach it
 # total swap approx 4G
 dd if=/dev/zero of=/swapfile bs=1024 count=3072000
 chmod 600 /swapfile
@@ -16,13 +18,6 @@ swapon /swapfile
 echo "/swapfile swap swap defaults 0 0" >> /etc/fstab
 
 echo 'INSTALLER: Expanded swap'
-
-# convert into Oracle Linux 7
-curl -O https://linux.oracle.com/switch/centos2ol.sh
-sh centos2ol.sh
-rm /home/vagrant/centos2ol
-
-echo 'INSTALLER: Now running Oracle Linux 6'
 
 # install required libraries
 yum install -y MAKEDEV

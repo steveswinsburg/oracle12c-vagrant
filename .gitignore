@@ -1,3 +1,4 @@
 .vagrant/
 database/
 *.zip
+base-box/*.box

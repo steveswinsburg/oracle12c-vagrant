@@ -32,6 +32,7 @@ yum install -y libaio-devel
 
 # get up to date
 yum upgrade -y
+yum update -y
 
 echo 'INSTALLER: System updated'
 

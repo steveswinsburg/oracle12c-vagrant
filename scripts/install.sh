@@ -25,10 +25,11 @@ rm /home/vagrant/centos2ol
 echo 'INSTALLER: Now running Oracle Linux 6'
 
 # install required libraries
-yum install -y MAKEDEV
 yum install -y nano
 yum install -y libaio
 yum install -y libaio-devel
+yum install -y kernel-headers
+yum install -y kernel-devel
 
 # get up to date
 yum upgrade -y

@@ -5,11 +5,11 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  # copied directly from vagrant init chef/centos-6.5
+
   config.vm.box = "bento/centos-7.2"
   
   config.vm.box_check_update = false
-  config.vbguest.auto_update = true
+  config.vbguest.auto_update = false
   
   # workaround the vagrant 1.8.5 bug
   config.ssh.insert_key = false

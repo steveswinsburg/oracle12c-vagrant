@@ -2,8 +2,6 @@
 
 # Note that if you change the ORACLE_HOME or ORACLE_BASE in the response files
 # then you will also need to update this script
-# Note also that the VB Guest additions will be automatically installed on the NEXT vagrant up
-
 
 echo 'INSTALLER: Starting up'
 
